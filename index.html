@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Nesting</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221%22 y=%221%22 width=%2214%22 height=%2214%22 rx=%222%22 fill=%22%232f6fde%22/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <aside id="panel">
+        <header>
+          <h1>3D Nesting</h1>
+          <p class="sub">Pack parts into a bounded build volume using simplified shells.</p>
+        </header>
+
+        <section>
+          <h2>Models</h2>
+          <label id="drop" class="drop">
+            <input id="file" type="file" multiple accept=".stl,.obj,.3mf" />
+            <span>Drop STL / OBJ / 3MF files here or <u>browse</u></span>
+          </label>
+          <div class="row">
+            <button id="samples" type="button">Add sample parts</button>
+            <button id="clear" type="button">Remove all</button>
+          </div>
+          <ul id="model-list"></ul>
+          <p id="model-empty" class="hint">No models yet.</p>
+        </section>
+
+        <section>
+          <h2>Build volume (boundary)</h2>
+          <label class="field">
+            <span>Preset</span>
+            <select id="preset">
+              <option value="custom">Custom</option>
+              <option value="250,210,220">Prusa MK4 – 250 × 210 × 220</option>
+              <option value="256,256,256">Bambu Lab X1 / P1 – 256 × 256 × 256</option>
+              <option value="220,220,250">Creality Ender-3 – 220 × 220 × 250</option>
+              <option value="165,165,300">Formlabs Fuse 1 – 165 × 165 × 300</option>
+              <option value="340,340,600">EOS P 396 – 340 × 340 × 600</option>
+            </select>
+          </label>
+          <div class="grid3">
+            <label class="field"><span>Width X</span><input id="width" type="number" min="1" step="1" value="250" /></label>
+            <label class="field"><span>Depth Y</span><input id="depth" type="number" min="1" step="1" value="210" /></label>
+            <label class="field"><span>Height Z</span><input id="height" type="number" min="1" step="1" value="220" /></label>
+          </div>
+          <label class="field">
+            <span>Wall margin (mm)</span>
+            <input id="margin" type="number" min="0" step="0.5" value="5" />
+          </label>
+          <label class="field">
+            <span>Max. build volumes</span>
+            <input id="maxBins" type="number" min="1" max="50" step="1" value="3" />
+          </label>
+        </section>
+
+        <section>
+          <h2>Shell &amp; spacing</h2>
+          <label class="field">
+            <span>Shell tolerance / voxel size (mm)</span>
+            <input id="voxel" type="number" min="0.25" step="0.25" value="2" />
+          </label>
+          <label class="field">
+            <span>Minimum gap between parts (mm)</span>
+            <input id="gap" type="number" min="0" step="0.5" value="2" />
+          </label>
+          <p class="hint">The shell always encloses the real part and is at most one voxel larger on each axis. Smaller values pack tighter but take longer.</p>
+        </section>
+
+        <section>
+          <h2>Packing</h2>
+          <label class="field">
+            <span>Mode</span>
+            <select id="mode">
+              <option value="volume">Stack in volume (SLS / MJF)</option>
+              <option value="bed">Single layer on bed (FDM)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Rotations</span>
+            <select id="rotation">
+              <option value="none">Keep orientation</option>
+              <option value="z" selected>Around Z only</option>
+              <option value="all">Any face down</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Z rotation step</span>
+            <select id="zStep">
+              <option value="90" selected>90°</option>
+              <option value="45">45°</option>
+              <option value="30">30°</option>
+              <option value="15">15°</option>
+            </select>
+          </label>
+        </section>
+
+        <div class="actions">
+          <button id="pack" class="primary" type="button">Pack</button>
+          <div id="progress" hidden>
+            <progress id="progress-bar" max="1" value="0"></progress>
+            <span id="progress-label"></span>
+          </div>
+        </div>
+
+        <section id="results" hidden>
+          <h2>Result <span id="stale" class="badge" hidden>outdated</span></h2>
+          <div id="summary"></div>
+          <div class="row toggles">
+            <label><input id="showParts" type="checkbox" checked /> Parts</label>
+            <label><input id="showShells" type="checkbox" /> Shells</label>
+          </div>
+          <div id="exports" class="row wrap"></div>
+        </section>
+      </aside>
+
+      <main id="viewport">
+        <div id="overlay" class="overlay">Add models, then press <b>Pack</b>.</div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

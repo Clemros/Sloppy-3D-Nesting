@@ -5,6 +5,14 @@ A browser application that arranges 3D models inside a bounded build volume so t
 ## Usage
 
 ```bash
+./start.sh           # installs dependencies if needed, starts the server and opens the browser
+./start.sh --prod    # production build, served locally
+./start.sh --host    # additionally reachable from other devices on the network
+```
+
+Alternatively, the individual steps:
+
+```bash
 npm install
 npm run dev      # development server at http://localhost:5173
 npm run build    # static build in dist/ (relative paths, can be hosted anywhere)

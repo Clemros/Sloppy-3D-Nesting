@@ -10,6 +10,8 @@ A browser application that arranges 3D models inside a bounded build volume so t
 ./start.sh --host    # additionally reachable from other devices on the network
 ```
 
+On Windows, double-click `start.bat` or run `start.bat` in cmd / PowerShell.
+
 Alternatively, the individual steps:
 
 ```bash
